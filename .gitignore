@@ -1,0 +1,19 @@
+# ignore idea
+.idea/
+
+# ignore all logs
+*.log
+
+# ignore dossier
+/vendor
+/node_modules
+
+# ignore debug
+/src/Controller/DebugController.php
+/public/view/debug
+
+#ignore DB
+/src/Database/Database.php
+
+#ignore sql
+*.sql
