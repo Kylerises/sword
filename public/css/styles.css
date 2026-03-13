@@ -1,0 +1,184 @@
+/*Body*/
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(152, 181, 206);
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #2d1a05;
+    margin: 0;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-family: 'Cinzel', serif;
+    color: #a1792c;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 0 #fffbe6, 2px 2px 2px #c9a34155;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+h3 {
+    font-size: 1.75rem;
+}
+
+h4 {
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+}
+
+h6 {
+    font-size: 1rem;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+/*texte*/
+
+.text {
+    display: inline-block;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.text p {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+.bolder {
+    font-weight: bolder;
+}
+
+.version{
+    margin-top:auto;
+    margin-bottom:10px;
+}
+
+.home{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.home-header{
+    text-align:center;
+    margin-top:60px;
+    max-width:700px;
+}
+
+.auth{
+    margin-top:80px;
+    width:320px;
+}
+
+.tabs{
+    display:flex;
+    margin-bottom:20px;
+}
+
+.tab{
+    flex:1;
+    padding:10px;
+    cursor:pointer;
+}
+
+.tab.active{
+    font-weight:bold;
+    border-bottom:2px solid white;
+}
+
+.tab-content{
+    display:none;
+    flex-direction:column;
+    gap:10px;
+}
+
+.tab-content.active{
+    display:flex;
+}
+
+input{
+    padding:10px;
+}
+
+button{
+    padding:10px;
+    cursor:pointer;
+}
+
+#toast-container{
+    position:fixed;
+    top:20px;
+    right:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    z-index:9999;
+}
+
+.toast{
+    padding:12px 18px;
+    border-radius:6px;
+    color:white;
+    font-size:14px;
+    min-width:200px;
+    animation:toast-in 0.3s ease;
+}
+
+.toast.success{
+    background:#2ecc71;
+}
+
+.toast.error{
+    background:#e74c3c;
+}
+
+.toast.info{
+    background:#3498db;
+}
+
+@keyframes toast-in{
+    from{
+        opacity:0;
+        transform:translateX(50px);
+    }
+    to{
+        opacity:1;
+        transform:translateX(0);
+    }
+}

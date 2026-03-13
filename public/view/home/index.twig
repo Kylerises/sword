@@ -1,0 +1,42 @@
+{% extends "default.twig" %}
+
+{% block content %}
+
+<div class="home">
+
+    <header class="home-header">
+        <h1>SwordClicker</h1>
+        <p>
+            SwordClicker est un idle cliqueur, augmentez votre puissance,
+            combattez les boss et atteignez la plus haute zone.
+        </p>
+    </header>
+
+    <main class="auth">
+
+        <div class="tabs">
+            <button class="tab active" data-tab="login">Connexion</button>
+            <button class="tab" data-tab="register">Inscription</button>
+        </div>
+
+        <div class="tab-content active" id="login">
+            <input type="text" id="nameLogin" placeholder="Nom d'utilisateur">
+            <input type="password" id="passLogin" placeholder="Mot de passe">
+            <button id="btnLogin">Se connecter</button>
+        </div>
+
+        <div class="tab-content" id="register">
+            <input type="text" id="nameRegister" placeholder="Nom d'utilisateur">
+            <input type="password" id="passRegister" placeholder="Mot de passe">
+            <button id="btnRegister">Créer un compte</button>
+        </div>
+
+    </main>
+
+    <footer class="version">
+        &copy; 2026 SwordClicker - V {{ VERSION }}
+    </footer>
+
+</div>
+
+{% endblock %}

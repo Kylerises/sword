@@ -1,0 +1,17 @@
+{
+    "name": "kylerises/sword",
+    "autoload": {
+        "psr-4": {
+            "kylerises\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kylerises"
+        }
+    ],
+    "require": {
+        "twig/twig": "^3.8",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}
