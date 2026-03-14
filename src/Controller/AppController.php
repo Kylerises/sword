@@ -75,6 +75,19 @@ class AppController extends Controller
     }
 
     /**
+     * Retourne une json en cas de succés
+     * @param array $success
+     */
+    protected function successToJsonArr(array $success): void
+    {
+        header("Content-Type: application/JSON");
+
+            echo json_encode([
+                'success' => $success
+                ]);
+    }
+
+    /**
      * debug
      * @param mixed $data
      * @return void

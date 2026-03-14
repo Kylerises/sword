@@ -102,6 +102,38 @@ class Model
         return false;
     }
 
+    /**
+     * retourne l'id du joueur
+     * @return int
+     */
+    protected function getUserId(): int
+    {
+        return $_SESSION['user'] ?? 1;
+    }
+
+    /**
+     * @param array $data données
+     * @return bool
+     */
+    protected function updateUser(array $data): bool
+    {
+        $setParts = [];
+        $params = [];
+
+        foreach ($data as $key => $value) {
+            $setParts[] = "$key = :$key";
+            $params[$key] = $value;
+        }
+
+        $params['user_id'] = $this->getUserId();
+
+        $sql = "UPDATE {$this->table}
+                SET " . implode(', ', $setParts) . "
+                WHERE user_id = :user_id";
+
+        return $this->request($sql, $params) ? true : false;
+    }
+
     public function dump(mixed $data)
     {
         echo "<pre>";

@@ -182,3 +182,26 @@ button{
         transform:translateX(0);
     }
 }
+
+.rss-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30px;
+    background-color: #000000c7;
+    display: flex;
+    color: #2ecc71;
+}
+
+.power-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+#power {
+    justify-content: center;
+    align-items: center;
+}

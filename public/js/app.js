@@ -110,7 +110,7 @@ $(document).ready(function () {
     }
 
     if(btnLogin !== null) {
-        // call Loginn on click btn ----
+        // call Login on click btn ----
         btnLogin.addEventListener('click', () => {
             const username = document.getElementById("nameLogin").value;
             const password = document.getElementById("passLogin").value;
@@ -123,6 +123,151 @@ $(document).ready(function () {
             Login(username, password);
         });
     }
-    
 
+    // Function for formatted number into human readable format ----
+    function formatNumber(number) {
+
+        number = Number(number)
+
+        const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No'];
+
+        let i = 0;
+
+        while (number >= 1000 && i < suffixes.length - 1) {
+            number = number / 1000;
+            i++;
+        }
+
+        return number.toFixed(2).replace(/\.00$/, '') + suffixes[i];
+    }
+
+    // AJX display power per second ----
+    function displayPowerPerSecond() {
+        $.ajax({
+            url: CONFIG.domain + 'ressources/displayPowerPerSecond',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if(data.success) {
+                    let powerPerSecond = document.getElementById('power_per_second')
+                    powerPerSecond.textContent = 'Puissance par seconde: ' + formatNumber(data.success);
+
+                }
+            },
+
+            error: function (xhr, status, error) {
+                console.error('AJAX Error : ' + status + ' - ' + error);
+                console.error('Response: ', xhr.responseText);
+            }
+        });
+    }
+
+    // AJX display power ----
+    function displayPower() {
+        $.ajax({
+            url: CONFIG.domain + 'ressources/displayPower',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if(data.success) {
+                    let power = document.getElementById('power')
+                    power.textContent = 'Puissance: ' + formatNumber(data.success);
+
+                }
+            },
+
+            error: function (xhr, status, error) {
+                console.error('AJAX Error : ' + status + ' - ' + error);
+                console.error('Response: ', xhr.responseText);
+            }
+        });
+    }
+
+    // AJX display win ----
+    function displayWin() {
+        $.ajax({
+            url: CONFIG.domain + 'ressources/displayWin',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if(data.success) {
+                    let win = document.getElementById('win')
+                    win.textContent = 'Victoires: ' + formatNumber(data.success);
+
+                }
+            },
+
+            error: function (xhr, status, error) {
+                console.error('AJAX Error : ' + status + ' - ' + error);
+                console.error('Response: ', xhr.responseText);
+            }
+        });
+    }
+
+    // call function display once ----
+    displayPower();
+    displayPowerPerSecond()
+    displayWin()
+
+    // AJX load power ----
+    function loadPower() {
+        $.ajax({
+            url: CONFIG.domain + 'ressources/sendPowerAndPowerPerSec',
+            type: 'POST',
+            dataType: 'json',
+
+            success: function(data) {
+
+                if(data.success) {
+
+                    actualPower = parseInt(data.success.power);
+                    pps = parseInt(data.success.pps);
+
+                    startPowerLoop();
+                }
+
+            }
+        });
+    }
+
+    // start a loop increasing power each 1 second (dynamic)
+    function startPowerLoop() {
+
+        setInterval(() => {
+
+            actualPower += pps;
+
+            document.getElementById('power').textContent =
+                'Puissance: ' + formatNumber(actualPower);
+
+        }, 1000);
+
+    }
+
+    // call loadPower and start loop
+    loadPower();
+
+    function saveStats() {
+        $.ajax({
+            url: CONFIG.domain + 'ressources/saveStats',
+            type: 'POST',
+            dataType: 'json',
+
+            success: function(data) {
+                if(data.success) {
+                   showToast(data.success, "success");
+                   displayPower();
+                   loadPower();
+                }
+            },
+
+            error: function (xhr, status, error) {
+                console.error('AJAX Error : ' + status + ' - ' + error);
+                console.error('Response: ', xhr.responseText);
+            }
+        });
+    }
+
+    // call save for test REMOVE AFTER
+    saveStats();
 });
