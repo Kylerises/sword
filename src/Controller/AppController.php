@@ -39,11 +39,7 @@ class AppController extends Controller
      */
     protected function isUserConnected(): ?int
     {
-        if(!isset($_SESSION['user'])) {  
-            return null;
-        }
-
-        return $_SESSION['user'];
+        return $_SESSION['user'] ?? null;
     }
 
     /**

@@ -2,6 +2,8 @@ $(document).ready(function () {
     // CONSTANTES ---- 
     const btnRegister = document.getElementById("btnRegister")
     const btnLogin = document.getElementById("btnLogin")
+    const rssBar = document.querySelector('.rss-bar')
+    const backToGame = document.querySelector('.back-to-game')
 
     document.querySelectorAll(".tab").forEach(tab => {
 
@@ -38,6 +40,25 @@ $(document).ready(function () {
             toastQueue = toastQueue.filter(t => t !== message)
         }, 3000)
     }
+
+    // redirect to game on click
+    if(backToGame !== null) {
+        backToGame.addEventListener('click', function () {
+            window.location.href = CONFIG.domain + 'game';
+        });
+    }
+
+    const menuItems = document.querySelectorAll('.hud-items li[data-link]');
+
+    menuItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const target = item.getAttribute('data-link');
+            if(target) {
+                window.location.href = CONFIG.domain + target.replace('link-', '');
+            }
+        });
+    });
+    
     
     // REGISTRATION AJX ----
     function register(username, password) {
@@ -204,10 +225,91 @@ $(document).ready(function () {
         });
     }
 
-    // call function display once ----
-    displayPower();
-    displayPowerPerSecond()
-    displayWin()
+    // AJX display sword ----
+    function displayAllSword() {
+        $.ajax({
+            url: CONFIG.domain + 'sword/displayAllSword',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if (data.success && Array.isArray(data.success)) {
+                    let el = document.getElementById('sword-items');
+                    let html = '';
+
+                    data.success.forEach(sword => {
+                        html += `
+                            <li>
+                                <div class="sword-name">${sword.sword_name}</div>
+                                <div class="sword-img">
+                                    <img src="${CONFIG.domain}${sword.images}" alt="${sword.sword_name}">
+                                </div>
+                                <div class="sword-power">
+                                    Puissance: +${formatNumber(sword.sword_power)}
+                                </div>
+                                <div class="sword-power-required">
+                                    Requis: ${formatNumber(sword.sword_power_required)} Puissance
+                                </div>
+                            </li>
+                        `;
+                    });
+
+                    el.innerHTML = html;
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    }
+
+    // AJX display boss ----
+    function displayBossPerZone() {
+        $.ajax({
+            url: CONFIG.domain + 'boss/displayBossPerZone',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if (data.success && Array.isArray(data.success)) {
+                    let el = document.getElementById('boss-items');
+                    let html = '';
+
+                    data.success.forEach(boss => {
+                        html += `
+                            <li class="boss-card">
+                                <div class="boss-name">${boss.boss_name}</div>
+
+                                <div class="boss-img">
+                                    <img src="${CONFIG.domain}${boss.images}" alt="${boss.boss_name}">
+                                </div>
+
+                                <div class="boss-health">
+                                    <div class="boss-health-bar"></div>
+                                </div>
+
+                                <div class="boss-power-recommended">
+                                    Puissance recommandée: ${formatNumber(boss.recommended_power)}
+                                </div>
+
+                                <div class="boss-power">
+                                    HP: ${formatNumber(boss.boss_hp)}
+                                </div>
+
+                                <div class="boss-actions">
+                                    <button class="attack-boss">Attaquer</button>
+                                    <button class="stop-boss">Arrêter</button>
+                                </div>
+                            </li>
+                        `;
+                    });
+
+                    el.innerHTML = html;
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('AJAX Error:', status, error);
+            }
+        });
+    }
 
     // AJX load power ----
     function loadPower() {
@@ -220,8 +322,8 @@ $(document).ready(function () {
 
                 if(data.success) {
 
-                    actualPower = parseInt(data.success.power);
-                    pps = parseInt(data.success.pps);
+                    actualPower = Number(data.success.power);
+                    pps = Number(data.success.pps);
 
                     startPowerLoop();
                 }
@@ -231,21 +333,17 @@ $(document).ready(function () {
     }
 
     // start a loop increasing power each 1 second (dynamic)
+    let powerLoopStarted = false;
+
     function startPowerLoop() {
+        if (powerLoopStarted) return; // bloque les doublons
+        powerLoopStarted = true;
 
         setInterval(() => {
-
             actualPower += pps;
-
-            document.getElementById('power').textContent =
-                'Puissance: ' + formatNumber(actualPower);
-
+            document.getElementById('power').textContent = 'Puissance: ' + formatNumber(actualPower);
         }, 1000);
-
     }
-
-    // call loadPower and start loop
-    loadPower();
 
     function saveStats() {
         $.ajax({
@@ -268,6 +366,27 @@ $(document).ready(function () {
         });
     }
 
-    // call save for test REMOVE AFTER
-    saveStats();
+    // call function display once ----
+    if(rssBar !== null) {
+      displayPower();
+      displayPowerPerSecond();
+      displayWin();
+      // call loadPower and start loop
+      loadPower();
+    }
+
+    if(window.location.pathname.split('/').pop() == 'sword') {
+        displayAllSword();
+    }
+
+    if(window.location.pathname.split('/').pop() == 'boss') {
+        displayBossPerZone();
+    }
+
+    //saveStats();
+
+    function updateBossHealth(bar, percent) {
+        bar.style.width = percent + "%";
+    }
+
 });

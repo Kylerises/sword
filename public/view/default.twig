@@ -19,7 +19,9 @@
 		{% block stylesheet %}{% endblock %}
 	</head>
 	<body>
-		{% include 'rss.twig' %}
+		{% if isLogged %}
+			{% include 'rss.twig' %}
+		{% endif %}
 			<div id="toast-container"></div>
 			<div class="container">
 				{% block content %}

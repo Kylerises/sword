@@ -7,11 +7,13 @@ use kylerises\Model\RessourcesModel;
 class RessourcesController extends AppController
 {
     protected $model;
+    protected $user_id;
 
     public function __construct()
     {
         parent::__construct();
         $this->model = new RessourcesModel();
+        $this->user_id = $this->isUserConnected();
     }
 
     /**
@@ -19,7 +21,7 @@ class RessourcesController extends AppController
      */
     public function displayPower()
     {
-        $power = $this->model->getTotalPower($_SESSION['user']);
+        $power = $this->model->getTotalPower($this->user_id);
 
         $this->successToJson($power);
     }
@@ -29,7 +31,7 @@ class RessourcesController extends AppController
      */
     public function displayPowerPerSecond()
     {
-        $powerPerSecond = $this->model->getPowerPerSecond($_SESSION['user']);
+        $powerPerSecond = $this->model->getPowerPerSecond($this->user_id);
 
         $this->successToJson($powerPerSecond);
     }
@@ -39,7 +41,7 @@ class RessourcesController extends AppController
      */
     public function displayWin()
     {
-        $wins = $this->model->getWins($_SESSION['user']);
+        $wins = $this->model->getWins($this->user_id);
 
         $this->successToJson($wins);
     }
@@ -49,8 +51,8 @@ class RessourcesController extends AppController
      */
     public function sendPowerAndPowerPerSec()
     {
-        $power = $this->model->getTotalPower($_SESSION['user']);
-        $powerPerSecond = $this->model->getPowerPerSecond($_SESSION['user']);
+        $power = $this->model->getTotalPower($this->user_id);
+        $powerPerSecond = $this->model->getPowerPerSecond($this->user_id);
 
         $this->successToJsonArr(['power' => $power, 'pps' => $powerPerSecond]);
     }
@@ -60,13 +62,13 @@ class RessourcesController extends AppController
      */
     public function saveStats()
     {
-        $lastUpdate = $this->model->getLastUpdate($_SESSION['user']);
+        $lastUpdate = $this->model->getLastUpdate($this->user_id);
         $time = time();
 
         $elapse = $time - $lastUpdate;
 
-        $pps = $this->model->getPowerPerSecond($_SESSION['user']);
-        $power = $this->model->getTotalPower($_SESSION['user']);
+        $pps = $this->model->getPowerPerSecond($this->user_id);
+        $power = $this->model->getTotalPower($this->user_id);
 
         $tp = bcmul((string)$pps, (string)$elapse);
         $tp = bcadd($tp, (string)$power);

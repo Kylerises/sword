@@ -1,0 +1,38 @@
+{% extends 'default.twig' %}
+
+{% block content %}
+
+<button class="back-to-game">Revenir au menu principal</button>
+
+<div id="boss-hud">
+    <ul id="boss-items">
+        <li class="boss-card">
+
+            <div class="boss-name">Slime</div>
+
+            <div class="boss-img">
+                <img src="{{ path }}public/images/boss/slime.png">
+            </div>
+
+            <div class="boss-health">
+                <div class="boss-health-bar"></div>
+            </div>
+
+            <div class="boss-power-recommended">
+                Puissance recommandée: 4
+            </div>
+
+            <div class="boss-power">
+                Puissance: 20
+            </div>
+
+            <div class="boss-actions">
+                <button class="attack-boss">Attaquer</button>
+                <button class="stop-boss">Arrêter</button>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+{% endblock %}

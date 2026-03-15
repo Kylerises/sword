@@ -51,9 +51,18 @@ abstract class Controller
      */
     private function dataFullPage(): array
     {
+        // on instancie les variables pour éviter les erreurs
+        $isLogged = '';
+        
+        //On vérifie si session n'est pas vide
+        if (!empty($_SESSION['user'])) {
+            $isLogged = true;
+        }
+
         return [
             "path" => $this->path,
-            "VERSION" => Constants::VERSION
+            "VERSION" => Constants::VERSION,
+            "isLogged" => $isLogged
         ];
     }
 }
