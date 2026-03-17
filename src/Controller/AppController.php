@@ -6,9 +6,12 @@ use kylerises\Core\Controller;
 
 class AppController extends Controller
 {
+    protected $user_id;
+
     public function __construct()
     {
         parent::__construct();
+        $this->user_id = $this->isUserConnected();
     }
 
     /**

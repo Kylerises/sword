@@ -7,6 +7,16 @@ use kylerises\Entity\RessourcesEntity;
 class RessourcesModel extends RessourcesEntity
 {
     /**
+     * Récupère toutes les ressources d'un utilisateur
+     * @param int $user_id
+     * @return array|bool
+     */
+    public function allRessource(int $user_id): array|bool
+    {
+        return $this->getAllRessourceFromId($user_id);
+    }
+
+    /**
      * Récupère la puissance par seconde
      * @param int $user_id
      * @return string

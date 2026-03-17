@@ -7,13 +7,28 @@ use kylerises\Model\RessourcesModel;
 class RessourcesController extends AppController
 {
     protected $model;
-    protected $user_id;
 
     public function __construct()
     {
         parent::__construct();
         $this->model = new RessourcesModel();
-        $this->user_id = $this->isUserConnected();
+    }
+
+    /**
+     * AJX pour récupérer toutes les ressources
+     */
+    public function ressource()
+    {
+        $rss = $this->model->allRessource($this->user_id);
+        $pps = $rss['power_per_second'];
+        $power = $rss['total_power'];
+        $win = $rss['win'];
+
+        $this->successToJsonArr([
+            'pps' => $pps,
+            'power' => $power,
+            'win' => $win
+        ]);
     }
 
     /**

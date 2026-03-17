@@ -1,0 +1,92 @@
+<?php
+
+namespace kylerises\Controller;
+
+use kylerises\Model\PlayerZoneModel;
+use kylerises\Model\PresetZonesModel;
+use kylerises\Model\RequirementZoneModel;
+use kylerises\Model\RessourcesModel;
+
+class ZonesController extends AppController
+{
+
+    public function displayActualZone()
+    {
+        $playerZoneModel = new PlayerZoneModel();
+        $actualZone = $playerZoneModel->actualPlayerZone($this->isUserConnected());
+
+        $this->successToJson($actualZone['zone_id']);
+    }
+
+    public function displayAllZones()
+    {
+        $presetZoneModel = new PresetZonesModel();
+        $requireModel = new RequirementZoneModel();
+        $playerZoneModel = new PlayerZoneModel();
+
+        $zones = $presetZoneModel->AllPresetZone();
+        $boss = $requireModel->allRequirementZoneByUserId($this->user_id);
+        $actualZone = $playerZoneModel->actualPlayerZone($this->isUserConnected());
+
+        $data = [];
+
+        foreach($zones as $zone) {
+
+            $zone_id = $zone['zone_id'];
+            $index = $zone_id -1;
+
+            $data[] = [
+                'zone_id' => $zone_id,
+                'name' => $zone['name'],
+                'images' => $zone['images'],
+                'power_required' => $zone['power_required'],
+                'win_required' => $zone['win_required'],
+                'boss_name' => $zone['boss_name'],
+                'last_boss_zone' => $zone['last_boss_zone'],
+                'boss_zone_kill' => $zone['boss_zone_kill'],
+                'boss_kill' => $boss[$index]['boss_kill'] ?? 0,
+                'is_unlocked' => $boss[$index]['is_unlocked'] ?? 0,
+                'actual_zone' => $actualZone['zone_id']
+            ];
+            
+        }
+
+        $this->successToJsonArr($data);
+    }
+
+    public function unlockZone()
+    {
+        $zone_id = $_POST['id'];
+
+        $rssModel = new RessourcesModel();
+        $presetZoneModel = new PresetZonesModel();
+        $requireModel = new RequirementZoneModel();
+
+        $rss = $rssModel->allRessource($this->user_id);
+        $preset = $presetZoneModel->getPresetZone($zone_id);
+        $requireZone = $requireModel->requirementZoneByUserIdAndZoneId($this->user_id, $zone_id);
+
+        $power = $rss['total_power'];
+        $win = $rss['win'];
+        $boss_kill = $requireZone['boss_kill'];
+
+        $power_required = $preset['power_required'];
+        $win_required = $preset['win_required'];
+        $boss_zone_kill = $preset['boss_zone_kill'];
+
+        $notEnoughPower = bccomp($power, $power_required) < 0;
+        $notEnoughWin   = bccomp($win, $win_required) < 0;
+        $notEnoughBoss  = $boss_kill < $boss_zone_kill;
+
+        if($notEnoughPower || $notEnoughWin || $notEnoughBoss) {
+            $this->errorToJson("Les pré-requis ne sont pas remplit !");
+        }
+
+        $this->successToJson("La zone à été débloqué");
+    }
+
+    public function index()
+    {
+        $this->render('zones');
+    }
+}

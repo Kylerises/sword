@@ -4,6 +4,7 @@ $(document).ready(function () {
     const btnLogin = document.getElementById("btnLogin")
     const rssBar = document.querySelector('.rss-bar')
     const backToGame = document.querySelector('.back-to-game')
+    const menuItems = document.querySelectorAll('.hud-items li[data-link]');
 
     document.querySelectorAll(".tab").forEach(tab => {
 
@@ -48,8 +49,6 @@ $(document).ready(function () {
         });
     }
 
-    const menuItems = document.querySelectorAll('.hud-items li[data-link]');
-
     menuItems.forEach(item => {
         item.addEventListener('click', () => {
             const target = item.getAttribute('data-link');
@@ -58,7 +57,6 @@ $(document).ready(function () {
             }
         });
     });
-    
     
     // REGISTRATION AJX ----
     function register(username, password) {
@@ -150,7 +148,7 @@ $(document).ready(function () {
 
         number = Number(number)
 
-        const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No'];
+        const suffixes = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'ttD', 'spD', 'tstG', 'Se', 'tvG', 'tstvG'];
 
         let i = 0;
 
@@ -366,6 +364,165 @@ $(document).ready(function () {
         });
     }
 
+    // AJX display actual zone ----
+    function displayActualZone() {
+        $.ajax({
+            url: CONFIG.domain + 'zones/displayActualZone',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if(data.success) {
+                    
+                    let zone = document.getElementById('actual-zone')
+                    zone.textContent = 'Zone actuelle: ' + data.success;
+
+                }
+            },
+
+            error: function (xhr, status, error) {
+                console.error('AJAX Error : ' + status + ' - ' + error);
+                console.error('Response: ', xhr.responseText);
+            }
+        });
+    }
+
+    // AJX resource Promise to simplify ----
+    function ressource() {
+        return $.ajax({
+            url: CONFIG.domain + 'ressources/ressource',
+            type: 'POST',
+            dataType: 'json'
+        });
+    }
+
+    // AJX displayAllZones ----
+    function displayAllZones() {
+
+        $.ajax({
+            url: CONFIG.domain + 'zones/displayAllZones',
+            type: 'POST',
+            dataType: 'json',
+
+            success: function(data) {
+
+                if(data.success) {
+
+                    ressource().then(function(rss){
+
+                        const power = Number(rss.success.power);
+                        const win = Number(rss.success.win);
+
+                        let el = document.querySelector('.zone-items');
+                        let html = '';
+
+                        data.success.forEach(zone => {
+
+                            let locked = '';
+                            let nameColor = 'red';
+                            let powerColor = 'red';
+                            let bossColor = 'red';
+                            let winColor = 'red';
+                            let unlockBtn = '';
+                            let teleportBtn = '';
+
+                            if(power < Number(zone.power_required) || win < Number(zone.win_required) || zone.boss_kill < zone.boss_zone_kill){
+                                locked = 'zone-locked';
+                            }
+
+                            if(power >= Number(zone.power_required)) {
+                                powerColor = 'green';
+                            }
+
+                            if(zone.boss_kill >= zone.boss_zone_kill) {
+                                bossColor = 'green';
+                            }
+
+                            if(win >= Number(zone.win_required)) {
+                                winColor = 'green';
+                            }
+
+                            if(winColor === 'green' && powerColor === 'green' && bossColor === 'green') {
+                                nameColor = 'green';
+                            }
+
+                            if(zone.is_unlocked === 0 && nameColor === 'green') {
+                                unlockBtn = `<button class="unlock-zone" data-id="${zone.zone_id}">Débloquer</button>`
+                            }
+
+                            if(zone.actual_zone !== zone.zone_id && zone.is_unlocked === 1) {
+                                teleportBtn = `<button class="teleport-zone" data-id="${zone.zone_id}">Se téléporter</button>`
+                            }
+
+                            html += `
+                            <li class="zone-card ${locked}">
+                                
+                                <div class="zone-img">
+                                    <img src="${CONFIG.domain}${zone.images}">
+                                </div>
+                                
+                                <div class="zone-name ${nameColor}">
+                                    ${zone.name}
+                                </div>
+
+                                <div class="zone-requirements">
+
+                                    <div class="zone-req">
+                                        <span class="${powerColor}">Puissance requise: ${formatNumber(zone.power_required)}</span>
+                                    </div>
+
+                                    <div class="zone-req">
+                                        <span class="${bossColor}">${zone.boss_name}: ${zone.boss_kill} / ${zone.boss_zone_kill}</span>
+                                    </div>
+
+                                    <div class="zone-req">
+                                        <span class="${winColor}">Victoires requise: ${formatNumber(zone.win_required)}</span>
+                                    </div>
+
+                                    ${unlockBtn} ${teleportBtn}
+
+                                </div>
+                            </li>`;
+                        });
+
+                        el.innerHTML = html;
+
+                    });
+
+                }
+
+            }
+
+        });
+
+    }
+
+    // AJX unlockZone
+    function unlockZone(zone_id) {
+        $.ajax({
+            url: CONFIG.domain + 'zones/unlockZone',
+            type: 'POST',
+            dataType: 'json',
+            data: {id: zone_id},
+
+            success: function(data) {
+                if(data.success) {
+                    showToast(data.success, "success");
+                } else {
+                    showToast(data.error, "error");
+                }
+            }
+        });
+    }
+
+    // délégation btn dynamique -> unlockZone
+    document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.unlock-zone[data-id]');
+    
+    if (!btn) return;
+
+    unlockZone(btn.dataset.id);
+});
+
     // call function display once ----
     if(rssBar !== null) {
       displayPower();
@@ -373,6 +530,10 @@ $(document).ready(function () {
       displayWin();
       // call loadPower and start loop
       loadPower();
+    }
+
+    if(window.location.pathname.split('/').pop() == 'game') {
+        displayActualZone();
     }
 
     if(window.location.pathname.split('/').pop() == 'sword') {
@@ -383,6 +544,9 @@ $(document).ready(function () {
         displayBossPerZone();
     }
 
+    if(window.location.pathname.split('/').pop() == 'zones') {
+        displayAllZones();
+    }
     //saveStats();
 
     function updateBossHealth(bar, percent) {

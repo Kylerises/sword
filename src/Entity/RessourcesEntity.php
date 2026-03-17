@@ -9,6 +9,18 @@ class RessourcesEntity extends Model
     protected $table = 'ressources';
 
     /**
+     * Récupère toutes les ressources d'un utilisateur
+     * @param int $user_id
+     * @return array|bool
+     */
+    protected function getAllRessourceFromId(int $user_id): array|bool
+    {
+        $query = "SELECT * FROM {$this->table} WHERE user_id = :user_id";
+        $stmt = $this->request($query, ['user_id' => $user_id]);
+        return $stmt->fetch() ?? false;
+    }
+
+    /**
      * Récupère un champs et sa valeur
      * @param string $field champs
      * @param int $user_id

@@ -16,6 +16,7 @@ class BossController extends AppController
 
     public function displayBossPerZone()
     {
+        // TODO: récupérer l'id de la zone actuelle
         $boss = $this->model->allBossPerZone(1);
 
         $this->successToJsonArr($boss);
