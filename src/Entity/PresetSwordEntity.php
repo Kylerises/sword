@@ -9,7 +9,6 @@ class PresetSwordEntity extends Model
     protected $table = 'preset_sword';
 
     /**
-     * Récupère toutes les épées
      * @return array
      */
     protected function getAllSwordPreset(): array
@@ -20,7 +19,6 @@ class PresetSwordEntity extends Model
     }
 
     /**
-     * Récupère le preset d'une épée
      * @param int $sword_id
      * @return array|false
      */

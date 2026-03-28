@@ -5,7 +5,7 @@ namespace kylerises\Controller;
 class LogoutController extends AppController
 {
     /**
-     * Affiche la page de déconnexion
+     * View logout
      *
      * @return void
      */
@@ -21,7 +21,6 @@ class LogoutController extends AppController
             exit;
         }
         
-        // On renvois la vue logout/index
         $this->render("logout");
     }
 }

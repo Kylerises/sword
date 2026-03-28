@@ -9,7 +9,6 @@ class UsersEntity extends Model
     protected $table = 'users';
 
     /**
-     * Insertion de l'utilisateur en base de données
      * @param array $data
      * @return bool
      */
@@ -26,7 +25,6 @@ class UsersEntity extends Model
     }
 
     /**
-     * Récupère nom d'utilisateur pour savoir si il est existant
      * @param string $username
      * @return bool
      */
@@ -43,7 +41,6 @@ class UsersEntity extends Model
     }
 
     /**
-     * Récupère le mot de passe d'un utilisateur par l'username
      * @param string $username
      * @return array|bool
      */
@@ -61,7 +58,6 @@ class UsersEntity extends Model
     }
 
     /**
-     * Récupére l'id de l'utilisateur
      * @param string $username
      * @return array|bool
      */

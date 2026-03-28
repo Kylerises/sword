@@ -5,7 +5,7 @@ namespace kylerises\Controller;
 class HomeController extends AppController
 {
     /**
-     * Affiche la page d'accueil
+     * view page
      *
      * @return void
      */
@@ -15,7 +15,6 @@ class HomeController extends AppController
             header('Location: ' . $this->path . 'game');
         }
 
-        // On renvois la vue home/index
         $this->render("home");
     }
 }

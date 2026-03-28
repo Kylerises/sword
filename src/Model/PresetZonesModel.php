@@ -8,7 +8,6 @@ class PresetZonesModel extends PresetZonesEntity
 {
 
     /**
-     * Récupère tout les presets des zones
      * @return array|false 
      */
     public function AllPresetZone(): array|false
@@ -17,7 +16,6 @@ class PresetZonesModel extends PresetZonesEntity
     }
 
     /**
-     * Récupère les preset d'une zone
      * @param int $zone_id
      * @return array|false
      */

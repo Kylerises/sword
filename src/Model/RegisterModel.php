@@ -7,7 +7,6 @@ use kylerises\Entity\UsersEntity;
 class RegisterModel extends UsersEntity
 {
     /**
-     * Méthode pour enregistrer un utilisateur en base de données
      * @param array $data
      * @return bool
      */
@@ -24,7 +23,6 @@ class RegisterModel extends UsersEntity
     }
 
     /**
-     * Méthode qui vérifie si un nom d'utilisateur existe
      * @param string $username
      * @return bool
      */

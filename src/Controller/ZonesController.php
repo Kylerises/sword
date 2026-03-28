@@ -9,8 +9,11 @@ use kylerises\Model\RessourcesModel;
 
 class ZonesController extends AppController
 {
-
-    public function displayActualZone()
+    /**
+     * Endpoint to display actual zone
+     * @return void
+     */
+    public function displayActualZone(): void
     {
         $playerZoneModel = new PlayerZoneModel();
         $actualZone = $playerZoneModel->actualPlayerZone($this->isUserConnected());
@@ -18,7 +21,11 @@ class ZonesController extends AppController
         $this->successToJson($actualZone['zone_id']);
     }
 
-    public function displayAllZones()
+    /**
+     * Endpoint to display all zone
+     * @return void
+     */
+    public function displayAllZones(): void
     {
         $presetZoneModel = new PresetZonesModel();
         $requireModel = new RequirementZoneModel();
@@ -54,7 +61,11 @@ class ZonesController extends AppController
         $this->successToJsonArr($data);
     }
 
-    public function unlockZone()
+    /**
+     * Endpoint to unlock a zone
+     * @return void
+     */
+    public function unlockZone(): void
     {
         $zone_id = $_POST['id'];
 
@@ -79,13 +90,40 @@ class ZonesController extends AppController
         $notEnoughBoss  = $boss_kill < $boss_zone_kill;
 
         if($notEnoughPower || $notEnoughWin || $notEnoughBoss) {
-            $this->errorToJson("Les pré-requis ne sont pas remplit !");
+            $this->errorToJson("you don't encounter the requirements !");
         }
 
-        $this->successToJson("La zone à été débloqué");
+        $winLeft = bcsub($win, $win_required);
+
+        $rssModel->setStats('win', $winLeft);
+
+        $requireModel->newRequirementZonePlayer($zone_id, 'is_unlocked', 1);
+
+        $this->successToJson("Zone: " . $zone_id . ' have been unlocked');
     }
 
-    public function index()
+    /**
+     * Endpoint for teleport into new zone
+     * @return void
+     */
+    public function tp(): void
+    {
+        $zone_id = $_POST['id'];
+
+        $playerZoneModel = new PlayerZoneModel();
+
+        $isTeleport = $playerZoneModel->newPlayerZone($zone_id);
+
+        if($isTeleport) {
+            $this->successToJson("teleportation in Zone: " . $zone_id);
+        }
+    }
+
+    /**
+     * page view
+     * @return void
+     */
+    public function index(): void
     {
         $this->render('zones');
     }

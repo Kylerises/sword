@@ -15,30 +15,30 @@ class LoginController extends AppController
     }
 
     /**
-     * Méthode ajax pour connecter un utilisateur
+     * Endpoint for log user
+     * @return void
      */
-    public function login()
+    public function login(): void
     {
-        // On récupère et on sanitize les données entrée par l'utilisateur
         $data = $this->sanitizeFormData($_POST);
-        // on stocke les données de l'utilisateur
+
         $username = $data['username'];
         $password = $data['password'];
-        // on vérifie si les données sont valides
+
         if(empty($username) || empty($password)) {
-            $this->errorToJson("Le nom d'utilisateur et/ou le mot de passe ne peuvent pas être vide !");
+            $this->errorToJson("username and password can't be empty !");
         }
-        // on récupère le password hashé de l'utilisateur
+
         $hashPassword = $this->model->getHashPassword($username);
-        // on vérifie le password et password hashé et on stocke le résultat
+
         $isPasswordCorrect = password_verify($password, $hashPassword);
-        // on fait la vérif du password pour connecter ou non l'utilisateur
+
         if($isPasswordCorrect !== true) {
-            $this->errorToJson("Le nom d'utilisateur et/ou le mot de passe sont incorrect !");
+            $this->errorToJson("username or password is incorrect !");
         }
 
         $_SESSION['user'] = $this->model->getIdUser($username);
         
-        $this->successToJson("Informations correct. Redirection en jeu");
+        $this->successToJson("Informations correct. redirect into game");
     }
 }

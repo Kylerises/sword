@@ -15,7 +15,7 @@ class AppController extends Controller
     }
 
     /**
-     * Nettoyage des données du formulaire
+     * clean form data
      *
      * @param array $formData
      * @return array
@@ -37,7 +37,7 @@ class AppController extends Controller
 
 
     /**
-     * Vérifie si l'utilisateur est connecté
+     * check if user is connected
      * @return ?int
      */
     protected function isUserConnected(): ?int
@@ -46,7 +46,7 @@ class AppController extends Controller
     }
 
     /**
-     * Retourne une json en cas d'erreur et stop le script
+     * return json in case error
      * @param string $error
      */
     protected function errorToJson(string $error): void
@@ -61,7 +61,7 @@ class AppController extends Controller
     }
 
     /**
-     * Retourne une json en cas de succés
+     * return json in case success
      * @param string $success
      */
     protected function successToJson(string $success): void
@@ -74,7 +74,7 @@ class AppController extends Controller
     }
 
     /**
-     * Retourne une json en cas de succés
+     * Return json array in case success
      * @param array $success
      */
     protected function successToJsonArr(array $success): void

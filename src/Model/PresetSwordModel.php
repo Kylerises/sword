@@ -7,7 +7,6 @@ use kylerises\Entity\PresetSwordEntity;
 class PresetSwordModel extends PresetSwordEntity
 {
     /**
-     * Récupère toutes les épées et leurs contenus
      * @return array
      */
     public function AllSwordPreset(): array
@@ -16,7 +15,6 @@ class PresetSwordModel extends PresetSwordEntity
     }
 
     /**
-     * Récupère une épée et son contenu
      * @param int $sword_id
      * @return array|false
      */

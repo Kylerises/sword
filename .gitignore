@@ -11,9 +11,3 @@
 # ignore debug
 /src/Controller/DebugController.php
 /public/view/debug
-
-#ignore DB
-/src/Database/Database.php
-
-#ignore sql
-*.sql

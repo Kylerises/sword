@@ -8,7 +8,7 @@ body {
     line-height: 1.5;
     color: #2d1a05;
     margin: 0;
-    overflow: hidden;
+    overflow-y: scroll;
 }
 
 a {
@@ -245,7 +245,7 @@ button{
 
 #sword-items {
     display: grid;
-    grid-template-columns: repeat(5, 200px);
+    grid-template-columns: repeat(5, 300px);
     gap: 15px;
     justify-content: center;
 
@@ -256,12 +256,14 @@ button{
 #sword-items li {
     display: grid;
 
-    grid-template-columns: 50px 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
 
     grid-template-areas:
-        "name name"
-        "image power";
+        "name"
+        "image"
+        "power"
+        "equip";
 
     background: #222;
     color: white;
@@ -271,21 +273,26 @@ button{
 
 .sword-name {
     grid-area: name;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 4px;
+    text-align: center;
 }
 
 .sword-img {
     grid-area: image;
+    display: flex;
+    justify-content: center;
 }
 
 .sword-power {
     grid-area: power;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    font-size: 12px;
+    justify-content: center;
+}
+
+.equiped {
+    grid-area: equip;
+    display: flex;
+    justify-content: center;
+    color: red;
 }
 
 .sword-img img {
@@ -296,6 +303,10 @@ button{
 #sword-items li:hover {
     background: #333;
     cursor: pointer;
+}
+
+#active-sword {
+    background-color: #25582c !important;
 }
 
 #boss-items {
@@ -325,26 +336,6 @@ button{
     width: 70px;
     height: 70px;
     margin-bottom: 10px;
-}
-
-.boss-health {
-    width: 100%;
-    height: 10px;
-
-    background: #ff0000;
-    border-radius: 6px;
-    overflow: hidden;
-
-    margin-bottom: 8px;
-}
-
-.boss-health-bar {
-    height: 100%;
-    width: 100%;
-
-    background: #15ff00;
-
-    transition: width 0.3s;
 }
 
 .boss-actions {
@@ -495,4 +486,12 @@ button{
 
 .unlock-zone:active, .teleport-zone:active {
     transform: scale(0.95);
+}
+
+#fight-timer{
+    display: flex;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bolder;
+    color: #388e3c;
 }

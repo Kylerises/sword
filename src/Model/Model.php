@@ -10,16 +10,12 @@ class Model
     protected $table;
     protected $db;
 
-    /**
-     * Constructeur de la classe Model
-     */
     public function __construct()
     {
         $this->db = Database::getInstance();
     }
 
     /**
-     * Méthode qui permet de faire une requête à la base de données
      *
      * @param string $sql
      * @param array $params
@@ -38,40 +34,6 @@ class Model
     }
 
     /**
-     * Méthode qui permet de récupérer un enregistrement d'une table par son id
-     *
-     * @param int $id
-     * @return array|bool
-     */
-    protected function selectById(int $id): array|bool
-    {
-        $query = $this->request('SELECT * FROM ' . $this->table . ' WHERE id = :id', [':id' => $id]);
-
-        if ($query) {
-            return $query->fetch();
-        }
-
-        return false;
-    }
-
-    /**
-     * Méthode qui permet de supprimer un enregistrement d'une table par son id
-     *
-     * @param int $id
-     * @return bool
-     */
-    protected function deleteById(int $id): bool
-    {
-        $query = $this->request('DELETE FROM ' . $this->table . ' WHERE id = :id', [':id' => $id]);
-
-        if ($query) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Méthode qui permet d'insérer un enregistrement dans une table
      *
      * @param array $data
      * @return bool
@@ -103,7 +65,6 @@ class Model
     }
 
     /**
-     * retourne l'id du joueur
      * @return int
      */
     protected function getUserId(): int
@@ -113,9 +74,10 @@ class Model
 
     /**
      * @param array $data données
+     * @param string $and
      * @return bool
      */
-    protected function updateUser(array $data): bool
+    protected function updateUser(array $data, string $and = ''): bool
     {
         $setParts = [];
         $params = [];
@@ -131,14 +93,12 @@ class Model
                 SET " . implode(', ', $setParts) . "
                 WHERE user_id = :user_id";
 
-        return $this->request($sql, $params) ? true : false;
-    }
+        if($and !== '') {
+            $sql = "UPDATE {$this->table}
+            SET " . implode(', ', $setParts) . "
+            WHERE user_id = :user_id $and";
+        }
 
-    public function dump(mixed $data)
-    {
-        echo "<pre>";
-        var_dump($data);
-        echo "</pre>";
-        exit;
+        return $this->request($sql, $params) ? true : false;
     }
 }

@@ -9,7 +9,6 @@ class RessourcesEntity extends Model
     protected $table = 'ressources';
 
     /**
-     * Récupère toutes les ressources d'un utilisateur
      * @param int $user_id
      * @return array|bool
      */
@@ -21,7 +20,6 @@ class RessourcesEntity extends Model
     }
 
     /**
-     * Récupère un champs et sa valeur
      * @param string $field champs
      * @param int $user_id
      * @return array|bool
@@ -36,7 +34,6 @@ class RessourcesEntity extends Model
     }
 
     /**
-     * Mets à jour un champ et sa valeur
      * @param string $field champs
      * @param mixed $data
      * @param int $user_id

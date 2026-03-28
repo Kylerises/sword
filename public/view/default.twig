@@ -41,7 +41,23 @@
 		<!-- config JS -->
 		<script src="{{ path }}public/js/config.js"></script>
 		<!-- app JS -->
-		<script src="{{ path }}public/js/app.js" defer ></script>
+		<script type ="module" src="{{ path }}public/js/app.js" defer ></script>
+		<!-- utils JS-->
+		<script type="module" src="{{ path }}public/js/utils.js"></script>
+		<!-- auth JS-->
+		<script type="module" src="{{ path }}public/js/auth/auth.js"></script>
+		{% if isLogged %}
+		<!-- rss JS-->
+		<script type="module" src="{{ path }}public/js/rssBar/rss.js"></script>
+		<!-- save JS-->
+		<script type="module" src="{{ path }}public/js/save/save.js"></script>
+		<!-- zones JS-->
+		<script type="module" src="{{ path }}public/js/zones/zones.js"></script>
+		<!-- boss JS-->
+		<script type="module" src="{{ path }}public/js/boss/boss.js"></script>
+		<!-- sword JS-->
+		<script type="module" src="{{ path }}public/js/sword/sword.js"></script>
+		{% endif %}
 		</footer>
 		{% block javascript %}{% endblock %}
 	</body>

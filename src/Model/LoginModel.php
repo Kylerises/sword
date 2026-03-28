@@ -7,7 +7,6 @@ use kylerises\Entity\UsersEntity;
 class LoginModel extends UsersEntity
 {
     /**
-     * Retourne le password hashé
      * @param string $username
      * @return string|bool
      */
@@ -19,7 +18,6 @@ class LoginModel extends UsersEntity
     }
 
     /**
-     * retourne l'id de l'utilisateur
      * @param string $username
      * @return int|bool
      */

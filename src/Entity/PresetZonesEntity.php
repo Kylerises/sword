@@ -9,7 +9,6 @@ class PresetZonesEntity extends Model
     protected $table = 'preset_zones';
 
     /**
-     * Récupère tout les preset zones
      * @return array|false
      */
     protected function getAllPresetZone(): array|false
@@ -20,7 +19,6 @@ class PresetZonesEntity extends Model
     }
 
     /**
-     * Récupère le requirement d'une zone
      * @param int $zone_id
      * @return array|false
      */

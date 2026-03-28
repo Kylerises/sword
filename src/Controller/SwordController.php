@@ -2,7 +2,9 @@
 
 namespace kylerises\Controller;
 
+use kylerises\Model\PlayerSwordModel;
 use kylerises\Model\PresetSwordModel;
+use kylerises\Model\RessourcesModel;
 
 class SwordController extends AppController
 {
@@ -15,16 +17,43 @@ class SwordController extends AppController
     }
 
     /**
-     * AJX afficher les épées
+     * Endpoint to display all sword
+     * @return void
      */
-    public function displayAllSword()
+    public function displayAllSword(): void
     {
         $swords = $this->model->AllSwordPreset();
+        $rssModel = new RessourcesModel();
+        $swordPlayerModel = new PlayerSwordModel();
 
-        $this->successToJsonArr($swords);
+        $swordData = $swordPlayerModel->actualPlayerSword($this->user_id);
+
+        $actualSword = $swordData['sword_id'];
+
+        $power = $rssModel->getTotalPower($this->user_id);
+
+        $data = [];
+
+        foreach($swords as $sword) {
+            $data[] = [
+                'id' => $sword['id'],
+                'sword_name' => $sword['sword_name'],
+                'sword_power' => $sword['sword_power'],
+                'sword_power_required' => $sword['sword_power_required'],
+                'images' => $sword['images'],
+                'power' => $power,
+                'actual_sword' => $actualSword
+            ];
+        }
+
+        $this->successToJsonArr($data);
     }
 
-    public function index()
+    /**
+     * view page
+     * @return void
+     */
+    public function index(): void
     {
         $this->render("sword");
     }

@@ -2,6 +2,8 @@
 
 namespace kylerises\Controller;
 
+use kylerises\Model\PlayerSwordModel;
+use kylerises\Model\PresetSwordModel;
 use kylerises\Model\RessourcesModel;
 
 class RessourcesController extends AppController
@@ -15,9 +17,10 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour récupérer toutes les ressources
+     * Endpoint to get all ressources from user
+     * @return void
      */
-    public function ressource()
+    public function ressource(): void
     {
         $rss = $this->model->allRessource($this->user_id);
         $pps = $rss['power_per_second'];
@@ -32,9 +35,10 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour afficher la puissance
+     * Endpoint display power
+     * @return void
      */
-    public function displayPower()
+    public function displayPower(): void 
     {
         $power = $this->model->getTotalPower($this->user_id);
 
@@ -42,9 +46,10 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour afficher la puissance par seconde
+     * Endpoint diplsay PPS
+     * @return void
      */
-    public function displayPowerPerSecond()
+    public function displayPowerPerSecond(): void
     {
         $powerPerSecond = $this->model->getPowerPerSecond($this->user_id);
 
@@ -52,9 +57,10 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour afficher les victoires
+     * Endpoint display win
+     * @return void
      */
-    public function displayWin()
+    public function displayWin():void
     {
         $wins = $this->model->getWins($this->user_id);
 
@@ -62,9 +68,10 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour envoyer power et power par seconde
+     * Endpoint to send power and pps
+     * @return void
      */
-    public function sendPowerAndPowerPerSec()
+    public function sendPowerAndPowerPerSec(): void
     {
         $power = $this->model->getTotalPower($this->user_id);
         $powerPerSecond = $this->model->getPowerPerSecond($this->user_id);
@@ -73,10 +80,15 @@ class RessourcesController extends AppController
     }
 
     /**
-     * AJX pour save les stats
+     * Endpoint saveStats
+     * @return void
      */
-    public function saveStats()
+    public function saveStats(): void
     {
+        if(is_null($this->isUserConnected())) {
+            exit();
+        }
+
         $lastUpdate = $this->model->getLastUpdate($this->user_id);
         $time = time();
 
@@ -92,13 +104,56 @@ class RessourcesController extends AppController
         $isTimeUpdate = $this->model->setStats('last_update', $time);
 
         if($isPowerUpdate === false) {
-            $this->errorToJson("Puissance non mis à jour !");
+            $this->errorToJson("power not update !");
         }
 
         if($isTimeUpdate === false) {
-            $this->errorToJson("Temps non mis à jour !");
+            $this->errorToJson("Time not update !");
         }
 
-        $this->successToJson("Sauvegarde effectuée !");
+        $this->successToJson("saved !");
+    }
+
+    /**
+     * Endpoint to save new pps after new sword unlock and equiped
+     * @return void
+     */
+    public function savePpsAfterNewSword(): void
+    {
+        $swordModel = new PresetSwordModel();
+        $playerSwordModel = new PlayerSwordModel();
+
+        $playerSword = $playerSwordModel->actualPlayerSword($this->user_id);
+
+        $actualSword = $playerSword['sword_id'];
+
+        $nextSwordData = $swordModel->swordPreset($actualSword + 1);
+
+        if($nextSwordData === false) {
+            exit();
+        }
+
+        $power = $this->model->getTotalPower($this->user_id);
+
+        if(bccomp($power, $nextSwordData['sword_power_required']) > 0) {
+            $newSword = $actualSword + 1;
+
+            $swordIsUpdate = $playerSwordModel->newSword($newSword);
+
+            if($swordIsUpdate) {
+                $newSwordData = $swordModel->swordPreset($newSword);
+
+                $newPps = $newSwordData['sword_power'];
+                $this->model->setStats('power_per_second', $newPps);
+
+                $this->successToJson("New sword unlocked and equiped!");
+                exit();
+            }
+
+            exit();
+
+        }
+
+        exit();
     }
 }

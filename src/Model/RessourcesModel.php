@@ -7,7 +7,6 @@ use kylerises\Entity\RessourcesEntity;
 class RessourcesModel extends RessourcesEntity
 {
     /**
-     * Récupère toutes les ressources d'un utilisateur
      * @param int $user_id
      * @return array|bool
      */
@@ -17,7 +16,6 @@ class RessourcesModel extends RessourcesEntity
     }
 
     /**
-     * Récupère la puissance par seconde
      * @param int $user_id
      * @return string
      */
@@ -28,7 +26,6 @@ class RessourcesModel extends RessourcesEntity
     }
 
     /**
-     * Récupère la puissance total
      * @param int $user_id
      * @return string
      */
@@ -39,7 +36,6 @@ class RessourcesModel extends RessourcesEntity
     }
 
     /**
-     * Récupère les victoires
      * @param int $user_id
      * @return string
      */
@@ -50,7 +46,6 @@ class RessourcesModel extends RessourcesEntity
     }
 
     /**
-     * Récupère le temps de la dernière update
      * @param int $user_id
      * @return int
      */
@@ -61,7 +56,6 @@ class RessourcesModel extends RessourcesEntity
     }
 
     /**
-     * Mets à jour un champ de l'utilisateur
      * @param string $field
      * @param mixed $data
      * @return bool
