@@ -101,6 +101,12 @@ class BossController extends AppController
         $totalWins = bcadd($playerWin, $wins);
         $totalDbKills = bcadd($playerKills, $kills);
 
+        if(bccomp($totalDbKills, '2147483647') >= 1) {
+            $totalDbKills = 2147483647;
+        } else {
+            $totalDbKills = (int)$totalDbKills;
+        }
+
         $rssModel->setStats('win', $totalWins);
 
         if ($boss_id == $lastBoss) {
